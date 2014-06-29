@@ -1,7 +1,7 @@
 DrawBySwift
 ===========
 
-simple draw app by swift
+simple draw app for OS X by swift
 
 You can draw lines, rectangles, triangles, circles. That's all.
 
