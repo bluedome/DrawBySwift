@@ -123,7 +123,10 @@ class DrawShape {
     }
 }
 
-func ==(lhs:DrawShape, rhs:DrawShape) -> Bool {
-    return (lhs.type == rhs.type) && (lhs.vertices == rhs.vertices) && (lhs.color == rhs.color) && (lhs.lineWidth == rhs.lineWidth) && (lhs.lineColor == rhs.lineColor)
+@infix func ==(lhs: DrawShape, rhs: DrawShape) -> Bool {
+    return (lhs.type == rhs.type) && (lhs.vertices == rhs.vertices) && (lhs.color == rhs.color) && (lhs.lineWidth == rhs.lineWidth) && (lhs.lineColor == rhs.lineColor) && (lhs.selected == rhs.selected)
 }
 
+@infix func !=(lhs: DrawShape, rhs: DrawShape) -> Bool {
+    return !(lhs == rhs)
+}

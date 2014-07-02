@@ -280,6 +280,11 @@ class DrawView: NSView {
         }
     }
     
+    override func magnifyWithEvent(event: NSEvent!) {
+        currentShapeTool?.magnifyWithEvent(event)
+        self.needsDisplay = true
+    }
+    
     override var acceptsFirstResponder: Bool {
     return true
     }

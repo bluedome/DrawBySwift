@@ -50,6 +50,59 @@ class BaseShapeTool {
         assert(false, "subclass must implement")
     }
     
+    func magnifyWithEvent(event: NSEvent) {
+        if shape.type == DrawShapeType.Triangle || shape.vertices.count < 2 {
+            return
+        }
+        
+        var p1 = shape.vertices[0]
+        var p2 = shape.vertices[1]
+        
+        if p1 == p2 {
+            return
+        }
+        
+        var a = p2.y - p1.y
+        var b = p1.x - p2.x
+        var c = p2.x*p1.y - p1.x*p2.y
+        
+        var coefficient = 15.0 * event.magnification
+        if a == 0 {
+            if p1.x <= p2.x {
+                p1.x -= coefficient
+                p2.x += coefficient
+            } else {
+                p1.x += coefficient
+                p2.x -= coefficient
+            }
+            
+        } else if b == 0 {
+            if p1.y <= p2.y {
+                p1.y -= coefficient
+                p2.y += coefficient
+            } else {
+                p1.y += coefficient
+                p2.y -= coefficient
+            }
+            
+        } else {
+            if p1.x <= p2.x {
+                p1.x -= coefficient
+                p2.x += coefficient
+            } else {
+                p1.x += coefficient
+                p2.x -= coefficient
+            }
+            
+            p1.y = -(a*p1.x + c)/b
+            p2.y = -(a*p2.x + c)/b
+        }
+        
+        shape.vertices[0] = p1
+        shape.vertices[1] = p2
+        
+    }
+    
     func resizeHanleContainsPoint(point: NSPoint) -> Bool {
         assert(false, "subclass must implement")
         return false
@@ -136,6 +189,7 @@ class LineShapeTool : BaseShapeTool {
         resizing = false
         dragged = false
     }
+
 }
 
 class RectShapeTool : BaseShapeTool {
