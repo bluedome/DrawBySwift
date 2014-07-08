@@ -25,10 +25,10 @@ enum DrawShapeType: Int {
     }
 }
 
-class DrawShape {
+class DrawShape: Equatable {
     let type: DrawShapeType
     
-    var vertices: Array<NSPoint> = []
+    var vertices: [NSPoint] = []
     var lineColor: NSColor = NSColor.blackColor()
     var color: NSColor = NSColor.whiteColor()
     var lineWidth = 1.0

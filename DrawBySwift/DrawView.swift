@@ -6,7 +6,7 @@
 import Cocoa
 
 class DrawView: NSView {
-    var drawContents: Array<DrawShape> = []
+    var drawContents: [DrawShape] = []
     var drawType: DrawShapeType = .Line
     var currentShapeTool: BaseShapeTool? {
     didSet {
@@ -22,7 +22,7 @@ class DrawView: NSView {
     var pasteCount = 0
     
     var createdShape = false
-    var preVertices: Array<NSPoint>?
+    var preVertices: [NSPoint]?
     
     var shapeSelectedHandler: ((shape: DrawShape?) -> ())?
     
@@ -52,7 +52,7 @@ class DrawView: NSView {
         }
         
         let gport = NSGraphicsContext.currentContext().graphicsPort()
-        let context = Unmanaged<CGContext>.fromOpaque(gport).takeUnretainedValue()
+        let context = Unmanaged<CGContext>.fromOpaque(COpaquePointer(gport)).takeUnretainedValue()
         
         CGContextSetStrokeColorWithColor(context, NSColor.blackColor().CGColor)
 //        NSLog("count=%d", drawContents.count)
@@ -373,9 +373,9 @@ class DrawView: NSView {
     }
     
     func removeShapeForUndo(shapes:NSArray) {
-        var indexes = Int[]()
+        var indexes = [Int]()
         for (index, s) in enumerate(drawContents) {
-            for remove in shapes as DrawShape[] {
+            for remove in shapes as [DrawShape] {
                 if s == remove {
                     indexes += index
                     remove.selected = false
@@ -399,5 +399,17 @@ class DrawView: NSView {
         // for redo
         self.undoManager.prepareWithInvocationTarget(self).addShapeForUndo(shapes)
     
+    }
+}
+
+extension Array {
+    func copy<T>() -> [T] {
+        var copied:[T] = []
+        for element in self {
+            if let casted = element as? T {
+                copied += casted
+            }
+        }
+        return copied
     }
 }
