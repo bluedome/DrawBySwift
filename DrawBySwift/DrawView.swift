@@ -160,7 +160,7 @@ class DrawView: NSView {
         if currentShapeTool && currentShapeTool!.resizeHanleContainsPoint(p) {
             // for resizing
             currentShapeTool!.mouseDown(event)
-            preVertices = currentShapeTool!.shape.vertices.copy()
+            preVertices = currentShapeTool!.shape.vertices // copy
             
         } else {
             var selectedShape: DrawShape?
@@ -195,7 +195,7 @@ class DrawView: NSView {
                 self.needsDisplay = true
 
                 self.shapeSelectedHandler?(shape:currentShapeTool!.shape)
-                preVertices = currentShapeTool!.shape.vertices.copy()
+                preVertices = currentShapeTool!.shape.vertices
 
             } else {
                 // create new one
@@ -399,17 +399,5 @@ class DrawView: NSView {
         // for redo
         self.undoManager.prepareWithInvocationTarget(self).addShapeForUndo(shapes)
     
-    }
-}
-
-extension Array {
-    func copy<T>() -> [T] {
-        var copied:[T] = []
-        for element in self {
-            if let casted = element as? T {
-                copied += casted
-            }
-        }
-        return copied
     }
 }

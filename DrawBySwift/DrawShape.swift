@@ -66,7 +66,7 @@ class DrawShape: Equatable {
         copied.lineWidth = self.lineWidth
         copied.color = self.color.copy() as NSColor
         copied.lineColor = self.lineColor.copy() as NSColor
-        copied.vertices = self.vertices.copy()
+        copied.vertices = self.vertices
         
         return copied
     }

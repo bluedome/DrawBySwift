@@ -2,9 +2,6 @@
 //  DrawBySwiftTests.swift
 //  DrawBySwiftTests
 //
-//  Created by tommy on 2014/06/25.
-//  Copyright (c) 2014年 bluedome. All rights reserved.
-//
 
 import XCTest
 
