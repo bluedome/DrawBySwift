@@ -51,7 +51,7 @@ class DrawView: NSView {
             return
         }
         
-        let gport = NSGraphicsContext.currentContext().graphicsPort()
+        let gport = NSGraphicsContext.currentContext().graphicsPort
         let context = Unmanaged<CGContext>.fromOpaque(COpaquePointer(gport)).takeUnretainedValue()
         
         CGContextSetStrokeColorWithColor(context, NSColor.blackColor().CGColor)
@@ -73,7 +73,7 @@ class DrawView: NSView {
             
             CGContextSetStrokeColorWithColor(context, shape.lineColor.CGColor)
             CGContextSetFillColorWithColor(context, shape.color.CGColor)
-            CGContextSetLineWidth(context, shape.lineWidth)
+            CGContextSetLineWidth(context, CGFloat(shape.lineWidth))
 
             if shape.type == DrawShapeType.Line {
                 var p1 = shape.vertices[0]

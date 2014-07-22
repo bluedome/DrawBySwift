@@ -17,10 +17,10 @@ class ShapeInfoController: NSWindowController {
     return sharedInstance
     }
     
-    @IBOutlet var lineWidthField: NSTextField
-    @IBOutlet var lineWidthStepper: NSStepper
-    @IBOutlet var lineColorWell: NSColorWell
-    @IBOutlet var fillColorWell: NSColorWell
+    @IBOutlet var lineWidthField: NSTextField?
+    @IBOutlet var lineWidthStepper: NSStepper?
+    @IBOutlet var lineColorWell: NSColorWell?
+    @IBOutlet var fillColorWell: NSColorWell?
     
     var delegate: ShapeInfoControllerDelegate?
     
@@ -29,7 +29,9 @@ class ShapeInfoController: NSWindowController {
     }
 
     @IBAction func updateWidthAction(sender: NSStepper) {
-        lineWidthField.doubleValue = sender.doubleValue
+        if let widthField = lineWidthField {
+            widthField.doubleValue = sender.doubleValue
+        }
         self.delegate?.shapeInfoControllerDidUpdate(self)
     }
     
@@ -46,7 +48,9 @@ class ShapeInfoController: NSWindowController {
         if let strVal = obj as? String {
             if let width = strVal.toInt() {
                 if width <= 30 && width > 0 {
-                    lineWidthStepper.doubleValue = Double(width)
+                    if let widthStepper = lineWidthStepper {
+                        widthStepper.doubleValue = Double(width)
+                    }
                     self.delegate?.shapeInfoControllerDidUpdate(self)
                     
                     return true
