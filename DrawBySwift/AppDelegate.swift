@@ -52,7 +52,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ShapeInfoControllerDelegate 
             return
         }
         
-        if shape {
+        if shape != nil {
             inspector.lineWidthField!.enabled = true
             inspector.lineWidthStepper!.enabled = true
             inspector.lineColorWell!.enabled = true

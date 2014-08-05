@@ -178,7 +178,7 @@ class LineShapeTool : BaseShapeTool {
         } else {
             // creating
             if shape.vertices.count < 2 {
-                shape.vertices += p
+                shape.vertices.append(p)
             } else {
                 shape.vertices[1] = p
             }
@@ -340,7 +340,7 @@ class RectShapeTool : BaseShapeTool {
         } else {
             // creating
             if shape.vertices.count < 2 {
-                shape.vertices += p
+                shape.vertices.append(p)
             } else {
                 shape.vertices[1] = p
             }
@@ -613,7 +613,7 @@ class CircleShapeTool : BaseShapeTool {
         } else {
             // creating
             if shape.vertices.count < 2 {
-                shape.vertices += p
+                shape.vertices.append(p)
             } else {
                 shape.vertices[1] = p
             }

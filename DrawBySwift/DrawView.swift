@@ -10,7 +10,7 @@ class DrawView: NSView {
     var drawType: DrawShapeType = .Line
     var currentShapeTool: BaseShapeTool? {
     didSet {
-        if !currentShapeTool {
+        if currentShapeTool != nil {
             // to nil
             self.shapeSelectedHandler?(shape: nil)
         }
@@ -26,20 +26,27 @@ class DrawView: NSView {
     
     var shapeSelectedHandler: ((shape: DrawShape?) -> ())?
     
-    init(frame: NSRect) {
+    override init(frame: NSRect) {
         super.init(frame: frame)
         // Initialization code here.
         
         trackingArea = NSTrackingArea(rect:self.bounds, options:.MouseMoved | .ActiveInActiveApp, owner:self, userInfo:nil)
-        self.addTrackingArea(trackingArea)
+        self.addTrackingArea(trackingArea!)
     }
 
+    required init(coder: NSCoder) {
+        super.init(coder: coder)
+
+        trackingArea = NSTrackingArea(rect:self.bounds, options:.MouseMoved | .ActiveInActiveApp, owner:self, userInfo:nil)
+        self.addTrackingArea(trackingArea!)
+    }
+    
     override func updateTrackingAreas() {
         super.updateTrackingAreas()
         
-        self.removeTrackingArea(trackingArea)
+        self.removeTrackingArea(trackingArea!)
         trackingArea = NSTrackingArea(rect:self.bounds, options:.MouseMoved | .ActiveInActiveApp, owner:self, userInfo:nil)
-        self.addTrackingArea(trackingArea)
+        self.addTrackingArea(trackingArea!)
     }
     
     override func drawRect(dirtyRect: NSRect) {
@@ -157,7 +164,7 @@ class DrawView: NSView {
             }
         }
 
-        if currentShapeTool && currentShapeTool!.resizeHanleContainsPoint(p) {
+        if currentShapeTool != nil && currentShapeTool!.resizeHanleContainsPoint(p) {
             // for resizing
             currentShapeTool!.mouseDown(event)
             preVertices = currentShapeTool!.shape.vertices // copy
@@ -172,17 +179,17 @@ class DrawView: NSView {
                 }
             }
             
-            if currentShapeTool && currentShapeTool!.shape !== selectedShape {
+            if currentShapeTool != nil && currentShapeTool!.shape !== selectedShape {
                 currentShapeTool!.shape.selected = false
                 self.needsDisplay = true
             }
 
-            if selectedShape {
+            if (selectedShape != nil) {
                 // bring to front
                 for (index, shape) in enumerate(drawContents) {
                     if shape === selectedShape {
                         var sel = drawContents.removeAtIndex(index)
-                        drawContents += sel
+                        drawContents.append(sel)
                         break
                     }
                 }
@@ -202,7 +209,7 @@ class DrawView: NSView {
                 var shape = DrawShape(drawType)
                 currentShapeTool = BaseShapeTool.toolForShape(shape, view:self)
                 
-                drawContents += shape
+                drawContents.append(shape)
                 createdShape = true
             }
             
@@ -235,7 +242,7 @@ class DrawView: NSView {
                     self.undoManager.prepareWithInvocationTarget(self).removeShapeForUndo([shape])
                 }
                 
-                if preVertices && shape.vertices != preVertices! {
+                if preVertices != nil && shape.vertices != preVertices! {
                     // arguments of invocation method must inherit nsobject...
                     let array:Array<NSValue> = preVertices!.map({ point in return NSValue(point:point) })
                     var dict:NSDictionary = ["shape":shape, "vertices": array]
@@ -323,7 +330,7 @@ class DrawView: NSView {
             currentShapeTool = BaseShapeTool.toolForShape(pasted, view: self)
             pasted.selected = true
             
-            drawContents += pasted
+            drawContents.append(pasted)
 
             self.undoManager.prepareWithInvocationTarget(self).removeShapeForUndo([pasted])
             
@@ -377,7 +384,7 @@ class DrawView: NSView {
         for (index, s) in enumerate(drawContents) {
             for remove in shapes as [DrawShape] {
                 if s == remove {
-                    indexes += index
+                    indexes.append(index)
                     remove.selected = false
                     break
                 }
