@@ -30,14 +30,14 @@ class DrawView: NSView {
         super.init(frame: frame)
         // Initialization code here.
         
-        trackingArea = NSTrackingArea(rect:self.bounds, options:.MouseMoved | .ActiveInActiveApp, owner:self, userInfo:nil)
+        trackingArea = NSTrackingArea(rect:self.bounds, options:[.MouseMoved, .ActiveInActiveApp], owner:self, userInfo:nil)
         self.addTrackingArea(trackingArea!)
     }
 
-    required init(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         super.init(coder: coder)
 
-        trackingArea = NSTrackingArea(rect:self.bounds, options:.MouseMoved | .ActiveInActiveApp, owner:self, userInfo:nil)
+        trackingArea = NSTrackingArea(rect:self.bounds, options:[.MouseMoved, .ActiveInActiveApp], owner:self, userInfo:nil)
         self.addTrackingArea(trackingArea!)
     }
     
@@ -45,7 +45,7 @@ class DrawView: NSView {
         super.updateTrackingAreas()
         
         self.removeTrackingArea(trackingArea!)
-        trackingArea = NSTrackingArea(rect:self.bounds, options:.MouseMoved | .ActiveInActiveApp, owner:self, userInfo:nil)
+        trackingArea = NSTrackingArea(rect:self.bounds, options:[.MouseMoved, .ActiveInActiveApp], owner:self, userInfo:nil)
         self.addTrackingArea(trackingArea!)
     }
     
@@ -58,7 +58,7 @@ class DrawView: NSView {
             return
         }
         
-        let gport = NSGraphicsContext.currentContext().graphicsPort
+        let gport = NSGraphicsContext.currentContext()!.graphicsPort
         let context = Unmanaged<CGContext>.fromOpaque(COpaquePointer(gport)).takeUnretainedValue()
         
         CGContextSetStrokeColorWithColor(context, NSColor.blackColor().CGColor)
@@ -70,7 +70,7 @@ class DrawView: NSView {
             CGContextSetLineWidth(context, 1.0)
             
             CGContextAddEllipseInRect(context, rect)
-            CGContextDrawPath(context, kCGPathFillStroke)
+            CGContextDrawPath(context, CGPathDrawingMode.FillStroke)
         }
         
         for shape in drawContents {
@@ -83,8 +83,8 @@ class DrawView: NSView {
             CGContextSetLineWidth(context, CGFloat(shape.lineWidth))
 
             if shape.type == DrawShapeType.Line {
-                var p1 = shape.vertices[0]
-                var p2 = shape.vertices[1]
+                let p1 = shape.vertices[0]
+                let p2 = shape.vertices[1]
                 
                 CGContextMoveToPoint(context, p1.x, p1.y)
                 CGContextAddLineToPoint(context, p2.x, p2.y)
@@ -96,8 +96,8 @@ class DrawView: NSView {
                 }
                 
             } else if shape.type == .Rect {
-                var p1 = shape.vertices[0]
-                var p2 = shape.vertices[1]
+                let p1 = shape.vertices[0]
+                let p2 = shape.vertices[1]
                 
                 var rect: CGRect = CGRect(origin:CGPoint(x:min(p1.x, p2.x), y:min(p1.y, p2.y)), size:CGSize(width:fabs(p1.x - p2.x), height:fabs(p1.y - p2.y)))
                 
@@ -112,16 +112,16 @@ class DrawView: NSView {
                 }
 
             } else if shape.type == .Triangle {
-                var p1 = shape.vertices[0]
-                var p2 = shape.vertices[1]
-                var p3 = shape.vertices[2]
+                let p1 = shape.vertices[0]
+                let p2 = shape.vertices[1]
+                let p3 = shape.vertices[2]
                 
                 CGContextMoveToPoint(context, p1.x, p1.y)
                 CGContextAddLineToPoint(context, p2.x, p2.y)
                 CGContextAddLineToPoint(context, p3.x, p3.y)
                 CGContextClosePath(context)
 
-                CGContextDrawPath(context, kCGPathFillStroke)
+                CGContextDrawPath(context, CGPathDrawingMode.FillStroke)
                 
                 if shape.selected {
                     drawResizeHandleRect(BaseShapeTool.resizeHandleRectForPoint(p1))
@@ -130,13 +130,13 @@ class DrawView: NSView {
                 }
 
             } else if shape.type == .Circle {
-                var p1 = shape.vertices[0]
-                var p2 = shape.vertices[1]
+                let p1 = shape.vertices[0]
+                let p2 = shape.vertices[1]
                 
                 var rect: CGRect = CGRect(origin:CGPoint(x:min(p1.x, p2.x), y:min(p1.y, p2.y)), size:CGSize(width:fabs(p1.x - p2.x), height:fabs(p1.y - p2.y)))
                 
                 CGContextAddEllipseInRect(context, rect)
-                CGContextDrawPath(context, kCGPathFillStroke)
+                CGContextDrawPath(context, CGPathDrawingMode.FillStroke)
                 
                 if shape.selected {
                     drawResizeHandleRect(BaseShapeTool.resizeHandleRectForPoint(NSPoint(x:rect.minX, y:rect.minY)))
@@ -156,14 +156,6 @@ class DrawView: NSView {
         p.x = floor(p.x)
         p.y = floor(p.y)
         
-        var selectedShape: DrawShape?
-        for shape in drawContents.reverse() {
-            if shape.containsPoint(p) {
-                selectedShape = shape
-                break
-            }
-        }
-
         if currentShapeTool != nil && currentShapeTool!.resizeHanleContainsPoint(p) {
             // for resizing
             currentShapeTool!.mouseDown(event)
@@ -172,7 +164,7 @@ class DrawView: NSView {
         } else {
             var selectedShape: DrawShape?
             
-            for shape in drawContents.reverse() {
+            for shape in Array(drawContents.reverse()) {
                 if shape.containsPoint(p) {
                     selectedShape = shape
                     break
@@ -186,9 +178,9 @@ class DrawView: NSView {
 
             if (selectedShape != nil) {
                 // bring to front
-                for (index, shape) in enumerate(drawContents) {
+                for (index, shape) in drawContents.enumerate() {
                     if shape === selectedShape {
-                        var sel = drawContents.removeAtIndex(index)
+                        let sel = drawContents.removeAtIndex(index)
                         drawContents.append(sel)
                         break
                     }
@@ -206,7 +198,7 @@ class DrawView: NSView {
 
             } else {
                 // create new one
-                var shape = DrawShape(drawType)
+                let shape = DrawShape(drawType)
                 currentShapeTool = BaseShapeTool.toolForShape(shape, view:self)
                 
                 drawContents.append(shape)
@@ -239,14 +231,14 @@ class DrawView: NSView {
                 shape.selected = true
                 
                 if createdShape {
-                    self.undoManager.prepareWithInvocationTarget(self).removeShapeForUndo([shape])
+                    self.undoManager!.prepareWithInvocationTarget(self).removeShapeForUndo([shape])
                 }
                 
                 if preVertices != nil && shape.vertices != preVertices! {
                     // arguments of invocation method must inherit nsobject...
                     let array:Array<NSValue> = preVertices!.map({ point in return NSValue(point:point) })
-                    var dict:NSDictionary = ["shape":shape, "vertices": array]
-                    self.undoManager.prepareWithInvocationTarget(self).updateShapeForUndo(dict)
+                    let dict:NSDictionary = ["shape":shape, "vertices": array]
+                    self.undoManager!.prepareWithInvocationTarget(self).updateShapeForUndo(dict)
                 }
             }
         }
@@ -287,7 +279,7 @@ class DrawView: NSView {
         }
     }
     
-    override func magnifyWithEvent(event: NSEvent!) {
+    override func magnifyWithEvent(event: NSEvent) {
         currentShapeTool?.magnifyWithEvent(event)
         self.needsDisplay = true
     }
@@ -296,7 +288,7 @@ class DrawView: NSView {
     return true
     }
 
-    override func validateMenuItem(menuItem: NSMenuItem!) -> Bool {
+    override func validateMenuItem(menuItem: NSMenuItem) -> Bool {
         if menuItem.action == "copy:" ||  menuItem.action == "delete:" {
             return currentShapeTool?.shape != nil
             
@@ -317,7 +309,7 @@ class DrawView: NSView {
     func paste(sender: AnyObject) {
         if let pasted = copiedShape?.copy() {
             let shift = CGFloat(++pasteCount * 10)
-            var updatedVerts = pasted.vertices.map{ (point) -> NSPoint in
+            let updatedVerts = pasted.vertices.map{ (point) -> NSPoint in
                 return NSPoint(x:point.x + shift, y:point.y - shift)
             }
             pasted.vertices = updatedVerts
@@ -332,7 +324,7 @@ class DrawView: NSView {
             
             drawContents.append(pasted)
 
-            self.undoManager.prepareWithInvocationTarget(self).removeShapeForUndo([pasted])
+            self.undoManager!.prepareWithInvocationTarget(self).removeShapeForUndo([pasted])
             
             self.needsDisplay = true
         }
@@ -340,11 +332,11 @@ class DrawView: NSView {
     
     func delete(sender: AnyObject) {
         if let shape = currentShapeTool?.shape {
-            for (index, s) in enumerate(drawContents) {
+            for (index, s) in drawContents.enumerate() {
                 if s === shape {
                     let removed = drawContents.removeAtIndex(index)
                     removed.selected = false
-                    self.undoManager.prepareWithInvocationTarget(self).addShapeForUndo([removed])
+                    self.undoManager!.prepareWithInvocationTarget(self).addShapeForUndo([removed])
                     break
                 }
             }
@@ -357,13 +349,13 @@ class DrawView: NSView {
     // for undo/redo
     
     func updateShapeForUndo(shapeInfo:NSDictionary) {
-        let shape = shapeInfo["shape"] as DrawShape
-        let vert = shapeInfo["vertices"] as Array<NSValue>
+        let shape = shapeInfo["shape"] as! DrawShape
+        let vert = shapeInfo["vertices"] as! Array<NSValue>
         let convertedVert:Array<NSPoint> = vert.map({ value in value.pointValue })
         
         // for redo
         let redoArray:Array<NSValue> = shape.vertices.map({ point in return NSValue(point:point) })
-        self.undoManager.prepareWithInvocationTarget(self).updateShapeForUndo([ "shape":shape, "vertices":redoArray ])
+        self.undoManager!.prepareWithInvocationTarget(self).updateShapeForUndo([ "shape":shape, "vertices":redoArray ])
         
         shape.vertices = convertedVert
         self.needsDisplay = true
@@ -371,18 +363,18 @@ class DrawView: NSView {
     
     func addShapeForUndo(shapes:NSArray) {
         if shapes.count > 0 {
-            drawContents += (shapes as Array<DrawShape>)
+            drawContents += (shapes as! Array<DrawShape>)
             self.needsDisplay = true
         
             // for redo
-            self.undoManager.prepareWithInvocationTarget(self).removeShapeForUndo(shapes)
+            self.undoManager!.prepareWithInvocationTarget(self).removeShapeForUndo(shapes)
         }
     }
     
     func removeShapeForUndo(shapes:NSArray) {
         var indexes = [Int]()
-        for (index, s) in enumerate(drawContents) {
-            for remove in shapes as [DrawShape] {
+        for (index, s) in drawContents.enumerate() {
+            for remove in shapes as! [DrawShape] {
                 if s == remove {
                     indexes.append(index)
                     remove.selected = false
@@ -404,7 +396,7 @@ class DrawView: NSView {
         }
         
         // for redo
-        self.undoManager.prepareWithInvocationTarget(self).addShapeForUndo(shapes)
+        self.undoManager!.prepareWithInvocationTarget(self).addShapeForUndo(shapes)
     
     }
 }

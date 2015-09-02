@@ -46,7 +46,7 @@ class ShapeInfoController: NSWindowController {
     // NSTextFieldDelegate
     func control(control: NSControl!, isValidObject obj: AnyObject!) -> Bool {
         if let strVal = obj as? String {
-            if let width = strVal.toInt() {
+            if let width = Int(strVal) {
                 if width <= 30 && width > 0 {
                     if let widthStepper = lineWidthStepper {
                         widthStepper.doubleValue = Double(width)

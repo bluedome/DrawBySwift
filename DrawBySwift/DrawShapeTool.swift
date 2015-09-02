@@ -62,11 +62,11 @@ class BaseShapeTool {
             return
         }
         
-        var a = p2.y - p1.y
-        var b = p1.x - p2.x
-        var c = p2.x*p1.y - p1.x*p2.y
+        let a = p2.y - p1.y
+        let b = p1.x - p2.x
+        let c = p2.x*p1.y - p1.x*p2.y
         
-        var coefficient = 15.0 * event.magnification
+        let coefficient = 15.0 * event.magnification
         if a == 0 {
             if p1.x <= p2.x {
                 p1.x -= coefficient
@@ -118,7 +118,7 @@ class LineShapeTool : BaseShapeTool {
     var distance2 = CGSizeZero
     
     func indexOfDraggedPoint(point: NSPoint) -> Int {
-        for (index, p) in enumerate(shape.vertices) {
+        for (index, p) in shape.vertices.enumerate() {
             let rect = BaseShapeTool.resizeHandleRectForPoint(p)
             if rect.contains(point) {
                 return index
@@ -284,7 +284,7 @@ class RectShapeTool : BaseShapeTool {
                 }
                 
             } else if resizeCorner == .LowerRight {
-                let maxX = rect.maxX
+//                let maxX = rect.maxX
                 let maxY = rect.maxY
 
                 rect.origin.y = p.y
@@ -301,7 +301,7 @@ class RectShapeTool : BaseShapeTool {
                 
             } else if resizeCorner == .UpperLeft {
                 let maxX = rect.maxX
-                let maxY = rect.maxY
+//                let maxY = rect.maxY
 
                 rect.origin.x = p.x
                 rect.size.width = maxX - p.x
@@ -372,7 +372,7 @@ class TriangleShapeTool : BaseShapeTool {
     var startPoint = NSZeroPoint
     
     func indexOfDraggedPoint(point: NSPoint) -> Int {
-        for (index, p) in enumerate(shape.vertices) {
+        for (index, p) in shape.vertices.enumerate() {
             let rect = BaseShapeTool.resizeHandleRectForPoint(p)
             if rect.contains(point) {
                 return index
@@ -557,7 +557,7 @@ class CircleShapeTool : BaseShapeTool {
                 }
                 
             } else if resizeCorner == .LowerRight {
-                let maxX = rect.maxX
+//                let maxX = rect.maxX
                 let maxY = rect.maxY
                 
                 rect.origin.y = p.y
@@ -574,7 +574,7 @@ class CircleShapeTool : BaseShapeTool {
                 
             } else if resizeCorner == .UpperLeft {
                 let maxX = rect.maxX
-                let maxY = rect.maxY
+//                let maxY = rect.maxY
                 
                 rect.origin.x = p.x
                 rect.size.width = maxX - p.x

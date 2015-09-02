@@ -5,29 +5,30 @@
 
 import Cocoa
 
+@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, ShapeInfoControllerDelegate {
                             
     @IBOutlet var window: NSWindow?
     @IBOutlet var drawView: DrawView?
     @IBOutlet var drawTypeSegment: NSSegmentedControl?
     
-    func applicationDidFinishLaunching(aNotification: NSNotification?) {
+    func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
         drawView!.shapeSelectedHandler = { shape in
-            if ShapeInfoController.sharedInspector.window.visible {
+            if ShapeInfoController.sharedInspector.window?.visible ?? false {
                 self.setShapeInfo(shape)
             }
         }
     }
 
-    func applicationWillTerminate(aNotification: NSNotification?) {
+    func applicationWillTerminate(aNotification: NSNotification) {
         // Insert code here to tear down your application
     }
 
     // Actions
     
     @IBAction func drawSegmentAction(sender: NSSegmentedControl) {
-        if let dtype = DrawShapeType.fromRaw(sender.selectedSegment) {
+        if let dtype = DrawShapeType(rawValue: sender.selectedSegment) {
             drawView!.drawType = dtype
         }
     }
@@ -70,7 +71,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ShapeInfoControllerDelegate 
                 inspector.fillColorWell!.enabled = true
             }
             
-            inspector.window.title = shape!.type.description
+            inspector.window!.title = shape!.type.description
             
         } else {
             inspector.lineWidthField!.enabled = false
@@ -78,7 +79,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ShapeInfoControllerDelegate 
             inspector.lineColorWell!.enabled = false
             inspector.fillColorWell!.enabled = false
             
-            inspector.window.title = "No Selected"
+            inspector.window!.title = "No Selected"
         }
     }
     
@@ -87,7 +88,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ShapeInfoControllerDelegate 
     func shapeInfoControllerDidUpdate(controller:ShapeInfoController) {
         if let shape = drawView?.currentShapeTool?.shape {
             let dict: NSDictionary = ["shape": shape, "fillColor":shape.color, "lineColor": shape.lineColor, "lineWidth": shape.lineWidth]
-            drawView!.undoManager.prepareWithInvocationTarget(self).undoShapeInfo(dict)
+            drawView!.undoManager!.prepareWithInvocationTarget(self).undoShapeInfo(dict)
 
             shape.lineWidth = controller.lineWidthStepper!.doubleValue
             shape.lineColor = controller.lineColorWell!.color
@@ -100,10 +101,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ShapeInfoControllerDelegate 
     // for undo
     
     func undoShapeInfo(info:NSDictionary) {
-        let shape = info["shape"] as DrawShape
-        let color = info["fillColor"] as NSColor
-        let lineColor = info["lineColor"] as NSColor
-        let width = info["lineWidth"] as CGFloat
+        let shape = info["shape"] as! DrawShape
+        let color = info["fillColor"] as! NSColor
+        let lineColor = info["lineColor"] as! NSColor
+        let width = info["lineWidth"] as! CGFloat
         
         shape.color = color
         shape.lineColor = lineColor
@@ -118,7 +119,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ShapeInfoControllerDelegate 
         
         // for redo
         if let dView = drawView {
-            dView.undoManager.prepareWithInvocationTarget(self).undoShapeInfo(info)
+            dView.undoManager!.prepareWithInvocationTarget(self).undoShapeInfo(info)
         
             dView.needsDisplay = true
         }

@@ -40,8 +40,8 @@ class DrawShape: Equatable {
             return CGRectZero
         }
         
-        var p1 = vertices[0]
-        var p2 = vertices[1]
+        let p1 = vertices[0]
+        let p2 = vertices[1]
 
         return CGRect(origin:CGPoint(x:min(p1.x, p2.x), y:min(p1.y, p2.y)), size:CGSize(width:fabs(p1.x - p2.x), height:fabs(p1.y - p2.y)))
     }
@@ -64,8 +64,8 @@ class DrawShape: Equatable {
     func copy() -> DrawShape {
         let copied = DrawShape(self.type)
         copied.lineWidth = self.lineWidth
-        copied.color = self.color.copy() as NSColor
-        copied.lineColor = self.lineColor.copy() as NSColor
+        copied.color = self.color.copy() as! NSColor
+        copied.lineColor = self.lineColor.copy() as! NSColor
         copied.vertices = self.vertices
         
         return copied
@@ -79,8 +79,8 @@ class DrawShape: Equatable {
                 return false
             }
             
-            var p1 = vertices[0]
-            var p2 = vertices[1]
+            let p1 = vertices[0]
+            let p2 = vertices[1]
             
             let dx = p2.x - p1.x
             let dy = p2.y - p1.y
@@ -106,7 +106,7 @@ class DrawShape: Equatable {
 
             if vertices.count < 2 { return false }
 
-            var bezierPath = NSBezierPath()
+            let bezierPath = NSBezierPath()
             bezierPath.moveToPoint(vertices[0])
             bezierPath.lineToPoint(vertices[1])
             bezierPath.lineToPoint(vertices[2])
@@ -115,7 +115,7 @@ class DrawShape: Equatable {
             return bezierPath.containsPoint(point)
             
         } else if (type == .Circle) {
-            var bezierPath = NSBezierPath(ovalInRect:presentedRect)
+            let bezierPath = NSBezierPath(ovalInRect:presentedRect)
             return bezierPath.containsPoint(point)
         }
         

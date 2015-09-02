@@ -10,7 +10,6 @@
 		65163D6A195C7E8900FFF575 /* ShapeInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65163D68195C7E8900FFF575 /* ShapeInfoController.swift */; };
 		65163D6B195C7E8900FFF575 /* ShapeInfoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 65163D69195C7E8900FFF575 /* ShapeInfoController.xib */; };
 		6567F42E195BFA3B008B1F77 /* DrawShapeTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6567F42D195BFA3B008B1F77 /* DrawShapeTool.swift */; };
-		65A26475195A9C4400FE3639 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A26474195A9C4400FE3639 /* main.swift */; };
 		65A26477195A9C4400FE3639 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A26476195A9C4400FE3639 /* AppDelegate.swift */; };
 		65A26479195A9C4400FE3639 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65A26478195A9C4400FE3639 /* Images.xcassets */; };
 		65A2647C195A9C4500FE3639 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 65A2647A195A9C4500FE3639 /* MainMenu.xib */; };
@@ -35,7 +34,6 @@
 		6567F42D195BFA3B008B1F77 /* DrawShapeTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawShapeTool.swift; sourceTree = "<group>"; };
 		65A2646F195A9C4400FE3639 /* DrawBySwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DrawBySwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65A26473195A9C4400FE3639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		65A26474195A9C4400FE3639 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		65A26476195A9C4400FE3639 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65A26478195A9C4400FE3639 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		65A2647B195A9C4500FE3639 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -102,7 +100,6 @@
 			isa = PBXGroup;
 			children = (
 				65A26473195A9C4400FE3639 /* Info.plist */,
-				65A26474195A9C4400FE3639 /* main.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -168,6 +165,8 @@
 		65A26467195A9C4400FE3639 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = bluedome;
 				TargetAttributes = {
@@ -227,7 +226,6 @@
 				6567F42E195BFA3B008B1F77 /* DrawShapeTool.swift in Sources */,
 				65A26477195A9C4400FE3639 /* AppDelegate.swift in Sources */,
 				65A26494195AA3A500FE3639 /* DrawShape.swift in Sources */,
-				65A26475195A9C4400FE3639 /* main.swift in Sources */,
 				65A26492195A9C6900FE3639 /* DrawView.swift in Sources */,
 				65163D6A195C7E8900FFF575 /* ShapeInfoController.swift in Sources */,
 			);
